@@ -34,15 +34,19 @@ async def help_scrabble(opsdroid, config, message):
 
 @match_regex(r'define: (.*)', case_sensitive=False)
 async def define(opsdroid, config, message):
-    word = message.regex.group(1)
+    term = message.regex.group(1)
     try:
-        definition = wordnet.synset(word + '.n.01').definition()
-        examples = wordnet.synset(word + '.n.01').examples()
-        synonyms = wordnet.synset(word + '.n.01').lemma_names()
+        synset = wordnet.synsets(term)
+        word = str(term) + str(synset[0])[-7:-2]
+
+        definition = wordnet.synset(word).definition()
+        examples = wordnet.synset(word).examples()
+        synonyms = wordnet.synset(word).lemma_names()
+
         await message.respond("Definition of the word '{}': {} \n"
                               "Synonyms: {} \n"
                               "You can use this word like such: {}".format(
-                                word, definition,
+                                term, definition,
                                 str(synonyms).replace("_", " "), examples))
 
     except nltk.corpus.reader.wordnet.WordNetError:
