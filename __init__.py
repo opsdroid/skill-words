@@ -53,10 +53,11 @@ async def define(opsdroid, config, message):
         await message.respond("Sorry, I can't find anything about that word.")
 
 
-@match_regex(r'translate: (.*) to: (.*)', case_sensitive=False)
+@match_regex(r'translate: (.*) from: (.*) to: (.*)', case_sensitive=False)
 async def translate(opsdroid, config, message):
     term = message.regex.group(1)
-    language = message.regex.group(2)
+    from_language = message.regex.group(2)
+    to_language = message.regex.group(3)
     languages_dict = {'spanish': 'es', 'belorussian': 'be', 'bulgarian': 'bg',
                       'catalan': 'cs', 'czech': 'cs', 'german': 'de',
                       'english': 'en', 'french': 'fr', 'croatian': 'hr',
@@ -66,10 +67,13 @@ async def translate(opsdroid, config, message):
                       'slovenian': 'sl', 'serbian': 'sr', 'ukrainian': 'uk'}
 
     _dictionary = dict(swadesh.entries(
-        ['en', languages_dict.get(language, 'english')]))
-
+        [
+            languages_dict.get(from_language, 'english'),
+            languages_dict.get(to_language, 'english')
+        ]))
+    await message.respond(str(_dictionary))
     translation = _dictionary.get(term, "Sorry, I can't find the "
                                         "translation for that word :(")
 
-    await message.respond("The word '{}' in {} is: {}".format(
-        term, language, translation))
+    await message.respond("The {} word '{}' in {} is: {}".format(
+        from_language, term, to_language, translation))
