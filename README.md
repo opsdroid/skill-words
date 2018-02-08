@@ -55,17 +55,3 @@ Opsdroid will translate a word from a language into another language.
 > user: translate: dog from: english to: portuguese
 >
 > opsdroid: The english word 'dog' in portuguese is: cão, cachorro
-
-**Note:**
-
-NLTK saves the different languages to translate a word into a tuple.  To get the translation from _language 1_ to _language 2_ a list is passed and NLTK builds a list containing a two element tuple that looks like this:
-
-`(<lang 1 term>, <lang 2 term>)`
-
-In some languages, there are different ways to name the same thing so the tuple will contain both terms. 
-
-_example: 'dog' in Portuguese can be translated to: 'cão, cachorro'_
-
-So when you try to translate the word 'dog' from English to Portuguese, you will get the right results. But if you try to translate 'cão' to English, no result will show because both terms are being stored in the dictionary.
-
-If Opsdroid keeps complaining that it couldn't find a translation for that word, the reason for that, is that, there are more than one word stored in the dictionary.

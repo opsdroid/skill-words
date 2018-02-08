@@ -58,6 +58,7 @@ async def translate(opsdroid, config, message):
     term = message.regex.group(1)
     from_language = message.regex.group(2)
     to_language = message.regex.group(3)
+    _dictionary = dict()
     languages_dict = {'spanish': 'es', 'belorussian': 'be', 'bulgarian': 'bg',
                       'catalan': 'cs', 'czech': 'cs', 'german': 'de',
                       'english': 'en', 'french': 'fr', 'croatian': 'hr',
@@ -65,13 +66,20 @@ async def translate(opsdroid, config, message):
                       'dutch': 'nl', 'polish': 'pl', 'portuguese': 'pt',
                       'romanian': 'ro', 'russian': 'ru', 'slovak': 'sk',
                       'slovenian': 'sl', 'serbian': 'sr', 'ukrainian': 'uk'}
-
-    _dictionary = dict(swadesh.entries(
+    entries = swadesh.entries(
         [
             languages_dict.get(from_language, 'english'),
             languages_dict.get(to_language, 'english')
-        ]))
-    await message.respond(str(_dictionary))
+        ])
+
+    for word in entries:
+        _word = word[0].split(', ')
+        if len(_word) > 1:
+            _dictionary[_word[0]] = word[1]
+            _dictionary[_word[1]] = word[1]
+        else:
+            _dictionary[word[0]] = word[1]
+
     translation = _dictionary.get(term, "Sorry, I can't find the "
                                         "translation for that word :(")
 
